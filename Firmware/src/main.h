@@ -9,9 +9,6 @@
 //#define DEBUGUART
 //#define PREVENTFLASHWRITE
 
-extern uint16_t tmp_millis;
-extern bit delay_on;
-
 SI_SBIT(PIN_1, SFR_P1, 0); //P+
 SI_SBIT(PIN_2, SFR_P1, 1); //P-
 

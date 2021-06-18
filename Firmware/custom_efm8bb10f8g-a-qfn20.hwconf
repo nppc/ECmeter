@@ -21,9 +21,12 @@
     <property object="INTERRUPT_0" propertyId="interrupt.interruptenable.enabletimer2interrupt" value="Enabled"/>
     <property object="P0.3" propertyId="ports.settings.inputmode" value="Analog"/>
     <property object="P0.3" propertyId="ports.settings.iomode" value="Analog I/O"/>
+    <property object="P0.3" propertyId="ports.settings.label" value="ADC_BAT"/>
     <property object="P0.3" propertyId="ports.settings.skip" value="Skipped"/>
+    <property object="P0.5" propertyId="ports.settings.label" value="BUTTON"/>
     <property object="P0.7" propertyId="ports.settings.inputmode" value="Analog"/>
     <property object="P0.7" propertyId="ports.settings.iomode" value="Analog I/O"/>
+    <property object="P0.7" propertyId="ports.settings.label" value="ADC_PROBE"/>
     <property object="P0.7" propertyId="ports.settings.skip" value="Skipped"/>
     <property object="P1.0" propertyId="ports.settings.inputmode" value="Analog"/>
     <property object="P1.0" propertyId="ports.settings.iomode" value="Analog I/O"/>
