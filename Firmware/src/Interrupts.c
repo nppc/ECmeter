@@ -11,18 +11,47 @@
 #include "main.h"
 #include "gen.h"
 
-
 //-----------------------------------------------------------------------------
 // TIMER2_ISR
 //-----------------------------------------------------------------------------
 // enters interrupt every 1ms
 //-----------------------------------------------------------------------------
 SI_INTERRUPT (TIMER2_ISR, TIMER2_IRQn)
-{
-  // advance delay timer
-  if(delay_on){
-    if(tmp_millis!=0){tmp_millis--;}else{delay_on=0;}
+  {
+    // advance delay timer
+    if(delay_on)
+      {
+        if(tmp_millis!=0)
+          { tmp_millis--;}
+        else
+          { delay_on=0;}
+      }
+
+    TMR2CN0_TF2H = 0;
+  }
+//-----------------------------------------------------------------------------
+// TIMER0_ISR
+//-----------------------------------------------------------------------------
+//
+// TIMER0 ISR Content goes here. Remember to clear flag bits:
+// TCON::TF0 (Timer 0 Overflow Flag)
+//
+//-----------------------------------------------------------------------------
+SI_INTERRUPT (TIMER0_ISR, TIMER0_IRQn)
+  {
+
   }
 
-  TMR2CN0_TF2H = 0;
-}
+//-----------------------------------------------------------------------------
+// INT1_ISR
+//-----------------------------------------------------------------------------
+//
+// INT1 ISR Content goes here. Remember to clear flag bits:
+// TCON::IE1 (External Interrupt 1)
+//
+//-----------------------------------------------------------------------------
+SI_INTERRUPT (INT1_ISR, INT1_IRQn)
+  {
+
+  }
+

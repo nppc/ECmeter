@@ -51,7 +51,8 @@ int main(void) {
 	ssd1306_init();
   ssd1306_clear_display();
   ssd1306_send_command(SSD1306_DISPLAYON);
-//  ssd1306_print_uSv();
+  //ssd1306_printBitmap(0,1,57,2,calib_bitmap);
+  ssd1306_printBitmap(0,0,33,4,EC_bitmap);
 
 
 	while(1){

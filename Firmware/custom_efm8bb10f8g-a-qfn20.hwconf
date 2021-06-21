@@ -16,8 +16,14 @@
     <property object="CLOCK_0" propertyId="clock.clockselect.clocksourcedivider" value="SYSCLK / 1"/>
     <property object="CLOCK_0" propertyId="clock.clockselect.sysclk" value="24.500 MHz"/>
     <property object="DefaultMode" propertyId="mode.diagramLocation" value="100, 100"/>
+    <property object="EXTINT_0" propertyId="ABPeripheral.included" value="true"/>
+    <property object="EXTINT_0" propertyId="extint.int0int1configuration.int0portpinselection" value="P0.5"/>
+    <property object="EXTINT_0" propertyId="extint.int0int1configuration.int1polarity" value="Active high"/>
+    <property object="EXTINT_0" propertyId="extint.int0int1configuration.int1portpinselection" value="P0.5"/>
     <property object="INTERRUPT_0" propertyId="ABPeripheral.included" value="true"/>
     <property object="INTERRUPT_0" propertyId="interrupt.interruptenable.enableallinterrupts" value="Enabled"/>
+    <property object="INTERRUPT_0" propertyId="interrupt.interruptenable.enableexternal1interrupt" value="Enabled"/>
+    <property object="INTERRUPT_0" propertyId="interrupt.interruptenable.enabletimer0interrupt" value="Enabled"/>
     <property object="INTERRUPT_0" propertyId="interrupt.interruptenable.enabletimer2interrupt" value="Enabled"/>
     <property object="P0.3" propertyId="ports.settings.inputmode" value="Analog"/>
     <property object="P0.3" propertyId="ports.settings.iomode" value="Analog I/O"/>
@@ -45,6 +51,10 @@
     <property object="TIMER16_2" propertyId="timer16.reloadlowbyte.reloadlowbyte" value="6"/>
     <property object="TIMER16_3" propertyId="ABPeripheral.included" value="true"/>
     <property object="TIMER_SETUP_0" propertyId="ABPeripheral.included" value="true"/>
+    <property object="TIMER_SETUP_0" propertyId="timer_setup.externalinterruptsettings.int1triggersensitivity" value="Edge-triggered"/>
+    <property object="TIMER_SETUP_0" propertyId="timer_setup.timer0.mode" value="Mode 1, 16-bit Counter/Timer"/>
+    <property object="TIMER_SETUP_0" propertyId="timer_setup.timer0.timerswitch2:gatecontrol" value="Enabled"/>
+    <property object="TIMER_SETUP_0" propertyId="timer_setup.timer01mode.timer0gatecontrol" value="Enabled"/>
     <property object="VREF_0" propertyId="ABPeripheral.included" value="true"/>
     <property object="VREF_0" propertyId="vref.hidden.voltagereferenceselect" value="VDD pin"/>
     <property object="VREF_0" propertyId="vref.voltagereferencecontrol.selectvoltagereference" value="Unregulated VDD"/>
