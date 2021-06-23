@@ -25,13 +25,13 @@ typedef struct
 
 typedef struct
 {
-	int16_t data; // calibration ADC value
+	int16_t ADCval; // calibration ADC value
 	uint8_t valid; // 0 - data predefined, 1 - valid calibration value
 } calib_t;
 
 
 extern glob_t glob;
-extern calib_t calib_data[6]; // calibration values 0 - 5
+extern calib_t xdata calib_data[6]; // calibration values 0 - 5
 
 
 #endif /* MAIN_H_ */

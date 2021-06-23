@@ -10,8 +10,9 @@ uint8_t getButtonState(void){
 	if(buttonstate==BUT_PRESSED){
 		// button is pressed
 		if(buttoncntr >= 161) {
-			glob.calibselection = (buttoncntr-161)/4;
+			glob.calibselection = (buttoncntr-161)/64;
 		}else{
+		  glob.calibselection = 0;
 			return BUT_NOTPRESSED;
 		}
 		return BUT_PRESSED;

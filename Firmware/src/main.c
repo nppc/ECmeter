@@ -25,7 +25,7 @@
 #include "button.h"
 
 volatile glob_t glob;
-volatile calib_t calib_data[6];
+volatile calib_t xdata calib_data[6];
 
 //-----------------------------------------------------------------------------
 // SiLabs_Startup() Routine
