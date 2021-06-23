@@ -42,7 +42,7 @@ SI_INTERRUPT (TIMER0_ISR, TIMER0_IRQn)
   {
     TCON_TF0=0;
     buttoncntr++;
-    buttonstate = 1; // pressed
+    buttonstate = BUT_PRESSED;
   }
 
 //-----------------------------------------------------------------------------
@@ -55,10 +55,10 @@ SI_INTERRUPT (TIMER0_ISR, TIMER0_IRQn)
 //-----------------------------------------------------------------------------
 SI_INTERRUPT (INT1_ISR, INT1_IRQn)
   {
-    if(buttoncntr>161){
-        buttonstate = 3; // long press
+    if(buttoncntr>161){ // about 5 seconds
+        buttonstate = BUT_LONGPRESS;
     }else if(buttoncntr>3){
-        buttonstate = 2; // short press
+        buttonstate = BUT_SHORTPRESS;
     }
     buttoncntr=0;
   }

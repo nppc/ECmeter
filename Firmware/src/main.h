@@ -15,5 +15,23 @@
 SI_SBIT(PIN_1, SFR_P1, 0); //P+
 SI_SBIT(PIN_2, SFR_P1, 1); //P-
 
+typedef enum {DISPLAY_EC,DISPLAY_CALIB,DISPLAY_LOWBAT,DISPLAY_CRITICALBAT} DISPLAY_STATE;
+
+typedef struct
+{
+	DISPLAY_STATE displaystate; // what is currently on display
+	uint8_t calibselection; // what EC value to calibrate
+} glob_t;
+
+typedef struct
+{
+	int16_t data; // calibration ADC value
+	uint8_t valid; // 0 - data predefined, 1 - valid calibration value
+} calib_t;
+
+
+extern glob_t glob;
+extern calib_t calib_data[6]; // calibration values 0 - 5
+
 
 #endif /* MAIN_H_ */

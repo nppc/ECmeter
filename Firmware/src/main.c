@@ -24,6 +24,8 @@
 #include "probe.h"
 #include "button.h"
 
+volatile glob_t glob;
+volatile calib_t calib_data[6];
 
 //-----------------------------------------------------------------------------
 // SiLabs_Startup() Routine
@@ -45,14 +47,16 @@ int main(void) {
   // Call hardware initialization routine
   enter_DefaultMode_from_RESET();
 
-  buttonstate = 0; // 0 - not pressed, 1 - pressed, 2 - released short press, 3 - released long press
+  buttonstate = BUT_NOTPRESSED;
+  glob.displaystate = DISPLAY_EC;
+  glob.calibselection = 0;
 
-  #ifdef DEBUGUART
+#ifdef DEBUGUART
 	prnUART("START",1);
 #endif
 
-	delay_ms(100); // need for ssd1306 init
-	ssd1306_init();
+  delay_ms(100); // need for ssd1306 init
+  ssd1306_init();
   ssd1306_clear_display();
   ssd1306_send_command(SSD1306_DISPLAYON);
   //ssd1306_printBitmap(0,1,57,2,calib_bitmap);
@@ -62,18 +66,22 @@ int main(void) {
 	    int16_t bat = getBatVoltageMv();
 	    int16_t probe = GetProbeADC();
       if(bat<BATMINVOLTAGE){
-          ssd1306_clear_display();
           // do we at minimal or critical voltage?
           if(bat<BATCRITICALVOLTAGE){
+			  if(glob.displaystate!=DISPLAY_CRITICALBAT) ssd1306_clear_display();
+			  glob.displaystate=DISPLAY_CRITICALBAT;
               ssd1306_printBitmap(1,1,126,2,batCritical_bitmap);
           }else{
+			  if(glob.displaystate!=DISPLAY_LOWBAT) ssd1306_clear_display();
+			  glob.displaystate=DISPLAY_LOWBAT;
               ssd1306_printBitmap(20,1,87,2,batLow_bitmap);
           }
       }else{
-        ssd1306_printBitmap(0,0,33,4,EC_bitmap);
-        probe = buttonstate;
-        if(buttonstate>1) buttonstate=0;
-        ssd1306_printNumber(probe);
+		if(glob.displaystate!=DISPLAY_EC) ssd1306_clear_display();
+		glob.displaystate=DISPLAY_EC;
+		ssd1306_printBitmap(0,0,33,4,EC_bitmap);
+        probe = getButtonState();
+        ssd1306_printNumber(probe*100+glob.calibselection);
 	    }
       delay_ms(1000);
 	}
