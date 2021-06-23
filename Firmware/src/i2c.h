@@ -42,8 +42,8 @@ and that both those copyright notices and this permission notice appear in suppo
 /***************************************************************************************************
                                SCL and SDA pin configuration
 ***************************************************************************************************/
-sbit SCL_PIN = P2^1; //SCL Connected to P2.1
-sbit SDA_PIN = P2^0; //SDA Connected to P2.0
+sbit SCL_PIN = P1^4; //SCL Connected to P1.4
+sbit SDA_PIN = P1^5; //SDA Connected to P1.5
 
 //#define i2c_delay 1	// speed of I2C
 //#define SCL_Direction SCL_PIN

@@ -10,6 +10,7 @@
 // USER INCLUDES
 #include "main.h"
 #include "gen.h"
+#include "button.h"
 
 //-----------------------------------------------------------------------------
 // TIMER2_ISR
@@ -39,7 +40,9 @@ SI_INTERRUPT (TIMER2_ISR, TIMER2_IRQn)
 //-----------------------------------------------------------------------------
 SI_INTERRUPT (TIMER0_ISR, TIMER0_IRQn)
   {
-
+    TCON_TF0=0;
+    buttoncntr++;
+    buttonstate = 1; // pressed
   }
 
 //-----------------------------------------------------------------------------
@@ -52,6 +55,11 @@ SI_INTERRUPT (TIMER0_ISR, TIMER0_IRQn)
 //-----------------------------------------------------------------------------
 SI_INTERRUPT (INT1_ISR, INT1_IRQn)
   {
-
+    if(buttoncntr>161){
+        buttonstate = 3; // long press
+    }else if(buttoncntr>3){
+        buttonstate = 2; // short press
+    }
+    buttoncntr=0;
   }
 

@@ -20,6 +20,9 @@
 #include "gen.h"
 #include "i2c.h"
 #include "SSD1306.h"
+#include "bat.h"
+#include "probe.h"
+#include "button.h"
 
 
 //-----------------------------------------------------------------------------
@@ -39,11 +42,12 @@ void SiLabs_Startup(void) {
 // main() Routine
 // ----------------------------------------------------------------------------
 int main(void) {
-  int16_t counter, adcval;
-  int32_t sum1, sum2;
   // Call hardware initialization routine
   enter_DefaultMode_from_RESET();
-#ifdef DEBUGUART
+
+  buttonstate = 0; // 0 - not pressed, 1 - pressed, 2 - released short press, 3 - released long press
+
+  #ifdef DEBUGUART
 	prnUART("START",1);
 #endif
 
@@ -52,47 +56,26 @@ int main(void) {
   ssd1306_clear_display();
   ssd1306_send_command(SSD1306_DISPLAYON);
   //ssd1306_printBitmap(0,1,57,2,calib_bitmap);
-  ssd1306_printBitmap(0,0,33,4,EC_bitmap);
 
 
 	while(1){
-	    sum1=0;
-      sum2=0;
-	    adcval=0;
-	    pinsPushPull();
-	    PIN_1 = 1;
-      PIN_2 = 0;
-      ADC0CN0_ADINT = 0;  // reset ADC complete interrupt
-      ADC0CN0_ADBUSY = 1; // start ADC conversions
-	    for(counter=0;counter<500;counter++){
-	        while(ADC0CN0_ADINT==0); // wait for adc to complete
-	        adcval = ADC0;
-          PIN_1 = !PIN_1;
-          PIN_2 = !PIN_2;
-          ADC0CN0_ADINT = 0;  // reset ADC complete interrupt
-          ADC0CN0_ADBUSY = 1; // start ADC conversions
-          sum1+=adcval;
-          while(ADC0CN0_ADINT==0); // wait for adc to complete
-          adcval = ADC0;
-          PIN_1 = !PIN_1;
-          PIN_2 = !PIN_2;
-          ADC0CN0_ADINT = 0;  // reset ADC complete interrupt
-          ADC0CN0_ADBUSY = 1; // start ADC conversions
-          sum2+=adcval;
+	    int16_t bat = getBatVoltageMv();
+	    int16_t probe = GetProbeADC();
+      if(bat<BATMINVOLTAGE){
+          ssd1306_clear_display();
+          // do we at minimal or critical voltage?
+          if(bat<BATCRITICALVOLTAGE){
+              ssd1306_printBitmap(1,1,126,2,batCritical_bitmap);
+          }else{
+              ssd1306_printBitmap(20,1,87,2,batLow_bitmap);
+          }
+      }else{
+        ssd1306_printBitmap(0,0,33,4,EC_bitmap);
+        probe = buttonstate;
+        if(buttonstate>1) buttonstate=0;
+        ssd1306_printNumber(probe);
 	    }
-      pinsHighZ();
-      sum1=sum1/500;
-      sum2=4095-(sum2/500);
-
-#ifdef DEBUGUART
-      sendUART(sum1,0);
-      prnUART(" ",0);
-      sendUART(sum2,0);
-      prnUART(" ",0);
-      sendUART(sum1-(sum1-sum2)/2,1);
-#endif
-      ssd1306_printNumber(sum1-(sum1-sum2)/2);
-      delay_ms(5000);
+      delay_ms(1000);
 	}
 
 }

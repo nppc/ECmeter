@@ -17,6 +17,7 @@
     <property object="CLOCK_0" propertyId="clock.clockselect.sysclk" value="24.500 MHz"/>
     <property object="DefaultMode" propertyId="mode.diagramLocation" value="100, 100"/>
     <property object="EXTINT_0" propertyId="ABPeripheral.included" value="true"/>
+    <property object="EXTINT_0" propertyId="extint.int0int1configuration.int0polarity" value="Active high"/>
     <property object="EXTINT_0" propertyId="extint.int0int1configuration.int0portpinselection" value="P0.5"/>
     <property object="EXTINT_0" propertyId="extint.int0int1configuration.int1polarity" value="Active high"/>
     <property object="EXTINT_0" propertyId="extint.int0int1configuration.int1portpinselection" value="P0.5"/>
@@ -53,7 +54,10 @@
     <property object="TIMER_SETUP_0" propertyId="ABPeripheral.included" value="true"/>
     <property object="TIMER_SETUP_0" propertyId="timer_setup.externalinterruptsettings.int1triggersensitivity" value="Edge-triggered"/>
     <property object="TIMER_SETUP_0" propertyId="timer_setup.timer0.mode" value="Mode 1, 16-bit Counter/Timer"/>
+    <property object="TIMER_SETUP_0" propertyId="timer_setup.timer0.timerrunningstate" value="Run when level of INT0 pin equals IN0PL"/>
+    <property object="TIMER_SETUP_0" propertyId="timer_setup.timer0.timerswitch1:runcontrol" value="Start"/>
     <property object="TIMER_SETUP_0" propertyId="timer_setup.timer0.timerswitch2:gatecontrol" value="Enabled"/>
+    <property object="TIMER_SETUP_0" propertyId="timer_setup.timer01control.timer0runcontrol" value="Start"/>
     <property object="TIMER_SETUP_0" propertyId="timer_setup.timer01mode.timer0gatecontrol" value="Enabled"/>
     <property object="VREF_0" propertyId="ABPeripheral.included" value="true"/>
     <property object="VREF_0" propertyId="vref.hidden.voltagereferenceselect" value="VDD pin"/>

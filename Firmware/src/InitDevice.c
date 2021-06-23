@@ -389,8 +389,9 @@ TIMER_SETUP_0_enter_DefaultMode_from_RESET (void)
   // $[TCON - Timer 0/1 Control]
   /***********************************************************************
    - INT1 is edge triggered
+   - Start Timer 0 running
    ***********************************************************************/
-  TCON |= TCON_IT1__EDGE;
+  TCON |= TCON_IT1__EDGE | TCON_TR0__RUN;
   // [TCON - Timer 0/1 Control]$
 
 }
@@ -400,12 +401,12 @@ EXTINT_0_enter_DefaultMode_from_RESET (void)
 {
   // $[IT01CF - INT0/INT1 Configuration]
   /***********************************************************************
-   - INT0 input is active low
+   - INT0 input is active high
    - Select P0.5
    - INT1 input is active high
    - Select P0.5
    ***********************************************************************/
-  IT01CF = IT01CF_IN0PL__ACTIVE_LOW | IT01CF_IN0SL__P0_5
+  IT01CF = IT01CF_IN0PL__ACTIVE_HIGH | IT01CF_IN0SL__P0_5
       | IT01CF_IN1PL__ACTIVE_HIGH | IT01CF_IN1SL__P0_5;
   // [IT01CF - INT0/INT1 Configuration]$
 
