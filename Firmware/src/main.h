@@ -7,7 +7,7 @@
 
 /***** COMPILATION VARIANTS *****/
 //#define DEBUGUART
-//#define PREVENTFLASHWRITE
+#define PREVENTFLASHWRITE
 
 #define BATMINVOLTAGE 3100
 #define BATCRITICALVOLTAGE 3000
@@ -31,7 +31,8 @@ typedef struct
 
 
 extern glob_t glob;
-extern calib_t xdata calib_data[6]; // calibration values 0 - 5
+#define CALIBRATIONVALUES 6
+extern calib_t xdata calib_data[CALIBRATIONVALUES]; // calibration values 0 - 5
 
 
 #endif /* MAIN_H_ */

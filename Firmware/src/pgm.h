@@ -1,12 +1,12 @@
 #ifndef INC_PGM_H_
 #define INC_PGM_H_
 
+#include "main.h"
 
-/****** CONSTANTS ******/
-#define EE_OUT1VAL		0xF800 // 1b
-#define EE_OUT2VAL		0xF801 // 1b
-#define EE_CRC			0xF802  // 1b
-#define EE_CODELASTADDR	0x3FFF	// last address of the code flash
+/****** EEPROM MAPP ******/
+#define EE_CALIBDATA	0x1E00 // 1b
+#define EE_CRC			0x1E00+CALIBRATIONVALUES*sizeof(calib_t)
+//#define EE_CODELASTADDR	0x1FFF	// last address of the code flash
 
 extern uint8_t FlashKey1, FlashKey2;
 

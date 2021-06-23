@@ -10,42 +10,47 @@ volatile uint8_t FlashKey1, FlashKey2;
 uint8_t calculateCRCsettingsEE(void);
 void erasePageEEflash(uint16_t addr);
 void write_flash_byte (uint8_t source, uint8_t xdata * destination);
-//void write_flash_Word (uint16_t data *source, uint8_t xdata * destination);
+void write_flash_Word (uint16_t source, uint8_t xdata * destination);
 
 void storeSettingsEE(void){
-	uint8_t crc;
-	int16_t val1, val2;
-	// first check did the values were changed?
-	val1 = CBYTE[EE_OUT1VAL];
-	val2 = CBYTE[EE_OUT2VAL];
-
+	uint8_t i,crc;
+	uint8_t *calib_ptr = calib_data;
+	uint8_t code *pflashwrite; // define empty pointer
+	pflashwrite = EE_CALIBDATA; // assign address to a pointer
+	//int16_t val1, val2;
 	// store to flash
 #ifdef PREVENTFLASHWRITE
 	flkey_clear
 #else
 	flkey_prepare
 #endif
-	erasePageEEflash(EE_OUT1VAL);
-	write_flash_byte(1 , EE_OUT1VAL);
-	write_flash_byte(2 , EE_OUT2VAL);
+	erasePageEEflash(EE_CALIBDATA);
+	for(i=0;i<(CALIBRATIONVALUES*sizeof(calib_t));i++){
+		write_flash_byte(calib_ptr[i]) , pflashwrite[i]);
+	}
 	//write_flash_Word((uint16_t)&mAsetLED1, EE_OUT1VAL);
-	//write_flash_Word((uint16_t)&mAsetLED2, EE_OUT2VAL);
-
 	crc = calculateCRCsettingsEE();
 	write_flash_byte(crc , EE_CRC);
 	flkey_clear
 }
 
 void defaultSettingsEE(void){
-	// minimum brightness
-	//adcglob.LedStep1 = 1;
-	//adcglob.LedStep2 = 1;
+	  calib_data[0].ADCval = 2800; calib_data[0].valid = 0;
+	  calib_data[1].ADCval = 1500; calib_data[1].valid = 0;
+	  calib_data[2].ADCval = 820; calib_data[2].valid = 0;
+	  calib_data[3].ADCval = 460; calib_data[3].valid = 0;
+	  calib_data[4].ADCval = 300; calib_data[4].valid = 0;
+	  calib_data[5].ADCval = 280; calib_data[5].valid = 0;
 }
 
 
 void loadSettingsEE(void){
 	// first check crc
 	uint8_t crc_calc,crc_stored;
+	uint8_t *calib_ptr = calib_data;
+	uint8_t code *pflashread; // define empty pointer
+	pflashread = EE_CALIBDATA; // assign address to a pointer
+
 	crc_calc = calculateCRCsettingsEE();
 	crc_stored = CBYTE[EE_CRC];
 	if(crc_calc != crc_stored){
@@ -53,17 +58,20 @@ void loadSettingsEE(void){
 		delay_ms(100); // wait until voltage stabilized as next we write to flash
 		storeSettingsEE();
 	}
-	adcglob.LedStep1 = CBYTE[EE_OUT1VAL];
-	adcglob.LedStep2 = CBYTE[EE_OUT2VAL];
+	// read flash
+
+	for(i=0;i<(EE_CRC-EE_CALIBDATA-1);i++){
+		calib_ptr[i]=pflashread[i];
+	}
 }
 
 // calculate flash CRC
 uint8_t calculateCRCsettingsEE(void){
 	uint8_t i, crc=0;
 	uint8_t code *pflashread; // define empty pointer
-	pflashread = EE_OUT1VAL; // assign address to a pointer
+	pflashread = EE_CALIBDATA; // assign address to a pointer
 
-	for(i=0;i<(EE_CRC-EE_OUT1VAL-1);i++){
+	for(i=0;i<(EE_CRC-EE_CALIBDATA-1);i++){
 		crc+=pflashread[i];
 	}
 	return crc=~crc+1;
@@ -97,27 +105,21 @@ void disable_flash_write(void){
 
 // store byte to address passed by value
 void write_flash_byte (uint8_t source, uint8_t xdata * destination){
-	//if(destination>=EE_OUT1VAL){
+	if(destination>=EE_CALIBDATA){
 		enable_flash_write();
+#ifndef PREVENTFLASHWRITE
 		*destination = source;  // Move the data to flash
+#else
+		source=source; // dummy operation to prevent warning
+#endif
 		disable_flash_write();
-	//}
+	}
 }
 
-/*
-// store byte to address passed by variable
-void write_flash_byteVar (uint8_t source, uint16_t destination){
-	uint8_t xdata *dst = (uint8_t xdata*)destination;
-		enable_flash_write();
-		*dst = source;  // Move the data to flash
-		disable_flash_write();
+void write_flash_Word (uint16_t source, uint8_t xdata * destination){
+	write_flash_byte(source>>8, destination);
+	write_flash_byte(source & 0xFF, destination+1);
 }
-
-void write_flash_Word (uint16_t data *source, uint8_t xdata * destination){
-	write_flash_byte(*source>>8, destination);
-	write_flash_byte(*source & 0xFF, destination+1);
-}
-*/
 
 void erasePageEEflash(uint16_t addr){
 	uint8_t xdata * a = (uint8_t*)addr;
