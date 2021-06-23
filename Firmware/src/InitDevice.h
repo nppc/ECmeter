@@ -30,11 +30,17 @@ ADC_0_enter_DefaultMode_from_RESET (void);
 extern void
 VREF_0_enter_DefaultMode_from_RESET (void);
 extern void
+LFOSC_0_enter_DefaultMode_from_RESET (void);
+extern void
 CLOCK_0_enter_DefaultMode_from_RESET (void);
 extern void
 TIMER16_2_enter_DefaultMode_from_RESET (void);
 extern void
 TIMER_SETUP_0_enter_DefaultMode_from_RESET (void);
+extern void
+PCA_0_enter_DefaultMode_from_RESET (void);
+extern void
+PCACH_0_enter_DefaultMode_from_RESET (void);
 extern void
 EXTINT_0_enter_DefaultMode_from_RESET (void);
 extern void

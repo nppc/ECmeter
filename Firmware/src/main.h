@@ -15,12 +15,14 @@
 SI_SBIT(PIN_1, SFR_P1, 0); //P+
 SI_SBIT(PIN_2, SFR_P1, 1); //P-
 
-typedef enum {DISPLAY_EC,DISPLAY_CALIB,DISPLAY_LOWBAT,DISPLAY_CRITICALBAT} DISPLAY_STATE;
+typedef enum {DISPLAY_EC,DISPLAY_CALIB,DISPLAY_CALIBNUMBLINK,DISPLAY_CALIBBLINK} DISPLAY_STATE;
 
 typedef struct
 {
 	DISPLAY_STATE displaystate; // what is currently on display
 	uint8_t calibselection; // what EC value to calibrate
+	uint8_t calibblinkntr;
+	uint8_t batcheckcntr;
 } glob_t;
 
 typedef struct

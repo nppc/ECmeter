@@ -23,6 +23,7 @@
 #include "bat.h"
 #include "probe.h"
 #include "button.h"
+#include "pgm.h"
 
 volatile glob_t glob;
 volatile calib_t xdata calib_data[6];
@@ -45,45 +46,80 @@ void SiLabs_Startup(void) {
 // ----------------------------------------------------------------------------
 int main(void) {
   // Call hardware initialization routine
+  int16_t bat;
   enter_DefaultMode_from_RESET();
 
   buttonstate = BUT_NOTPRESSED;
   glob.displaystate = DISPLAY_EC;
   glob.calibselection = 0;
+  glob.calibblinkntr = 0;
+  glob.batcheckcntr = 0;
 
 #ifdef DEBUGUART
 	prnUART("START",1);
 #endif
 
-  delay_ms(100); // need for ssd1306 init
+  delay_ms(80); // need for ssd1306 init
+
+  loadSettingsEE();
+
   ssd1306_init();
   ssd1306_clear_display();
   ssd1306_send_command(SSD1306_DISPLAYON);
   //ssd1306_printBitmap(0,1,57,2,calib_bitmap);
 
+  // check battery at startup
+  bat = getBatVoltageMv();
+  if(bat<BATMINVOLTAGE){
+      // do we at minimal or critical voltage?
+      if(bat<BATCRITICALVOLTAGE){
+          ssd1306_printBitmap(1,1,126,2,batCritical_bitmap);
+          while(1); // endless loop here as battery is critical
+      }else{
+          ssd1306_printBitmap(20,1,87,2,batLow_bitmap);
+          delay_ms(3000);
+      }
+  }
 
 	while(1){
-	    int16_t bat = getBatVoltageMv();
 	    int16_t probe = GetProbeADC();
-      if(bat<BATMINVOLTAGE){
-          // do we at minimal or critical voltage?
-          if(bat<BATCRITICALVOLTAGE){
-			  if(glob.displaystate!=DISPLAY_CRITICALBAT) ssd1306_clear_display();
-			  glob.displaystate=DISPLAY_CRITICALBAT;
-              ssd1306_printBitmap(1,1,126,2,batCritical_bitmap);
-          }else{
-			  if(glob.displaystate!=DISPLAY_LOWBAT) ssd1306_clear_display();
-			  glob.displaystate=DISPLAY_LOWBAT;
-              ssd1306_printBitmap(20,1,87,2,batLow_bitmap);
-          }
-      }else{
-		if(glob.displaystate!=DISPLAY_EC) ssd1306_clear_display();
-		glob.displaystate=DISPLAY_EC;
-		ssd1306_printBitmap(0,0,33,4,EC_bitmap);
-        probe = getButtonState();
-        ssd1306_printNumber(probe*100+glob.calibselection);
+	    uint8_t but = getButtonState();
+	    // check battery every minute
+	    if(glob.batcheckcntr>60){
+	        if(getBatVoltageMv()<BATMINVOLTAGE){
+	            // reset device to show warning
+	            RSTSRC=RSTSRC_SWRSF__SET | RSTSRC_PORSF__SET;
+	        }
 	    }
-      delay_ms(1000);
+
+	    // check button
+	    if(but==1){
+	        // enter calibration mode
+          if(glob.displaystate==DISPLAY_CALIB) glob.displaystate=DISPLAY_CALIBNUMBLINK; else glob.displaystate=DISPLAY_CALIB;
+          ssd1306_clear_display();
+          ssd1306_printBitmap(0,1,57,2,calib_bitmap);
+          if(glob.displaystate==DISPLAY_CALIB) ssd1306_printNumber(glob.calibselection*100);
+          delay_ms(250);
+      }else if(but==3){
+          uint8_t i;
+          // begin calibration with selected value
+          for(i=0;i<20;i++){
+            if(glob.displaystate==DISPLAY_CALIB) glob.displaystate=DISPLAY_CALIBBLINK; else glob.displaystate=DISPLAY_CALIB;
+            ssd1306_clear_display();
+            if(glob.displaystate==DISPLAY_CALIB) ssd1306_printBitmap(0,1,57,2,calib_bitmap);
+            ssd1306_printNumber(glob.calibselection*100);
+            delay_ms(500);
+          }
+      }else if(but==2){
+          // freeze/unfreeze display
+      }else{
+        if(glob.displaystate!=DISPLAY_EC) ssd1306_clear_display();
+          glob.displaystate=DISPLAY_EC;
+          ssd1306_printBitmap(0,1,29,3,EC_bitmap);
+          ssd1306_printNumber(probe);
+          delay_ms(1000);
+        }
+
 	}
 
 }

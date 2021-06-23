@@ -55,11 +55,33 @@ SI_INTERRUPT (TIMER0_ISR, TIMER0_IRQn)
 //-----------------------------------------------------------------------------
 SI_INTERRUPT (INT1_ISR, INT1_IRQn)
   {
-    if(buttoncntr>161){ // about 5 seconds
+    if(buttoncntr>161)
+      { // about 5 seconds
         buttonstate = BUT_LONGPRESS;
-    }else if(buttoncntr>3){
+      }
+    else if(buttoncntr>3)
+      {
         buttonstate = BUT_SHORTPRESS;
-    }
+      }
     buttoncntr=0;
+  }
+
+//-----------------------------------------------------------------------------
+// PCA0_ISR
+//-----------------------------------------------------------------------------
+//
+// PCA0 ISR Content goes here. Remember to clear flag bits:
+// PCA0CN0::CCF0 (PCA Module 0 Capture/Compare Flag)
+// PCA0CN0::CCF1 (PCA Module 1 Capture/Compare Flag)
+// PCA0CN0::CCF2 (PCA Module 2 Capture/Compare Flag)
+// PCA0CN0::CF (PCA Counter/Timer Overflow Flag)
+// PCA0PWM::COVF (Cycle Overflow Flag)
+//
+//-----------------------------------------------------------------------------
+SI_INTERRUPT (PCA0_ISR, PCA0_IRQn)
+  {
+    PCA0CN0_CCF0=0;
+    PCA0=0;
+    glob.batcheckcntr++;
   }
 

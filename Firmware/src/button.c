@@ -7,10 +7,20 @@ volatile BUT_STATE buttonstate;
 
 uint8_t getButtonState(void){
 	uint8_t tmp = buttonstate;
+	uint16_t tmpcntr;
 	if(buttonstate==BUT_PRESSED){
 		// button is pressed
-		if(buttoncntr >= 161) {
-			glob.calibselection = (buttoncntr-161)/64;
+	    IE_EA = 0;     //Disable interrupts
+	    tmpcntr = buttoncntr;
+	    IE_EA = 1;      //Enable interrupts
+	  if(tmpcntr >= 161) {
+			glob.calibselection = (tmpcntr-161)/64;
+			if(glob.calibselection>(CALIBRATIONVALUES-1)){
+		      IE_EA = 0;     //Disable interrupts
+		      buttoncntr=161;
+		      IE_EA = 1;      //Enable interrupts
+		      glob.calibselection = 0;
+			}
 		}else{
 		  glob.calibselection = 0;
 			return BUT_NOTPRESSED;
