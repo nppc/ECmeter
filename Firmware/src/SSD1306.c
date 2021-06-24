@@ -131,3 +131,19 @@ void ssd1306_printBitmap(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t cod
     y++;
   }
 }
+
+// x,y - position (x:0-127,y:0-3)
+//w,h - size (w:0-127,h:0-3)
+void ssd1306_printBitmapClear(uint8_t x, uint8_t y, uint8_t w, uint8_t h){
+  uint8_t ih, iw;
+  for(ih=0;ih<h;ih++){
+    setCol(x); // set the position
+    setRow(y);
+    ssd1306_write_display_start();
+    for(iw=0;iw<w;iw++){
+      I2C_Write(0);
+    }
+    I2C_Stop();
+    y++;
+  }
+}

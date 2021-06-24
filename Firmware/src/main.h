@@ -23,6 +23,7 @@ typedef struct
 	uint8_t calibselection; // what EC value to calibrate
 	uint8_t calibblinkntr;
 	uint8_t batcheckcntr;
+	uint8_t holdstate; // 0 - no hold, 1 - hold
 } glob_t;
 
 typedef struct

@@ -54,6 +54,7 @@ int main(void) {
   glob.calibselection = 0;
   glob.calibblinkntr = 0;
   glob.batcheckcntr = 0;
+  glob.holdstate = 0;
 
 #ifdef DEBUGUART
 	prnUART("START",1);
@@ -82,9 +83,11 @@ int main(void) {
   }
 
 	while(1){
-	    int16_t probe = GetProbeADC();
+	    int16_t probe;
 	    uint8_t but = getButtonState();
-	    // check battery every minute
+	    
+		if(glob.holdstate==0) probe = GetProbeADC();
+		// check battery every minute
 	    if(glob.batcheckcntr>60){
 	        if(getBatVoltageMv()<BATMINVOLTAGE){
 	            // reset device to show warning
@@ -112,6 +115,14 @@ int main(void) {
           }
       }else if(but==2){
           // freeze/unfreeze display
+		  if(glob.holdstate==0){
+			  glob.holdstate=1;
+			  ssd1306_printBitmap(0,0,24,1,hold_bitmap);
+			  
+		  }else{
+			  glob.holdstate=0;
+			  ssd1306_printBitmapClear(0,0,24,1);
+		  }
       }else{
         if(glob.displaystate!=DISPLAY_EC) ssd1306_clear_display();
           glob.displaystate=DISPLAY_EC;
