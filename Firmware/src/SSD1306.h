@@ -21,6 +21,7 @@ void setCol(uint8_t col);
 void setRow(uint8_t row);
 void ssd1306_printNumber(int16_t num);
 void ssd1306_printBitmap(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t code *bmp);
+void ssd1306_printBitmapClear(uint8_t x, uint8_t y, uint8_t w, uint8_t h);
 
 /** Set Lower Column Start Address for Page Addressing Mode. */
 #define SSD1306_SETLOWCOLUMN 0x00
@@ -256,6 +257,6 @@ static const uint8_t code hold_bitmap[] = {
 	0x3E, 0x41, 0x41, 0x41, 0x3E, 0x00, 0x00, 
 	0x7F, 0x40, 0x40, 0x40,0x00, 
 	0x7F, 0x41, 0x41, 0x63, 0x3E
-}
+};
 
 #endif /* INC_SSD1306_H_ */

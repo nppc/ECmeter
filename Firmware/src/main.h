@@ -1,9 +1,10 @@
-#include <SI_EFM8BB1_Register_Enums.h>                  // SFR declarations
-#include <SI_EFM8BB1_Defs.h>
-#include <stdint.h>
 
 #ifndef MAIN_H_
 #define MAIN_H_
+
+#include <SI_EFM8BB1_Register_Enums.h>                  // SFR declarations
+#include <SI_EFM8BB1_Defs.h>
+#include <stdint.h>
 
 /***** COMPILATION VARIANTS *****/
 //#define DEBUGUART
@@ -24,6 +25,7 @@ typedef struct
 	uint8_t calibblinkntr;
 	uint8_t batcheckcntr;
 	uint8_t holdstate; // 0 - no hold, 1 - hold
+	uint8_t probereadcntr; // count intervals between probe read
 } glob_t;
 
 typedef struct

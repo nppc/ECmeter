@@ -55,6 +55,7 @@ int main(void) {
   glob.calibblinkntr = 0;
   glob.batcheckcntr = 0;
   glob.holdstate = 0;
+  glob.probereadcntr = 0;
 
 #ifdef DEBUGUART
 	prnUART("START",1);
@@ -86,8 +87,13 @@ int main(void) {
 	    int16_t probe;
 	    uint8_t but = getButtonState();
 	    
-		if(glob.holdstate==0) probe = GetProbeADC();
-		// check battery every minute
+      if(glob.holdstate==0){
+          if(glob.probereadcntr>=5) {
+              glob.probereadcntr=0;
+              probe = GetProbeADC();
+          }
+      }
+      // check battery every minute
 	    if(glob.batcheckcntr>60){
 	        if(getBatVoltageMv()<BATMINVOLTAGE){
 	            // reset device to show warning
@@ -114,21 +120,20 @@ int main(void) {
             delay_ms(500);
           }
       }else if(but==2){
-          // freeze/unfreeze display
-		  if(glob.holdstate==0){
-			  glob.holdstate=1;
-			  ssd1306_printBitmap(0,0,24,1,hold_bitmap);
-			  
-		  }else{
-			  glob.holdstate=0;
-			  ssd1306_printBitmapClear(0,0,24,1);
-		  }
+        // freeze/unfreeze display
+        if(glob.holdstate==0){
+          glob.holdstate=1;
+          ssd1306_printBitmap(0,0,24,1,hold_bitmap);
+        }else{
+          glob.holdstate=0;
+          ssd1306_printBitmapClear(0,0,24,1);
+        }
       }else{
         if(glob.displaystate!=DISPLAY_EC) ssd1306_clear_display();
           glob.displaystate=DISPLAY_EC;
           ssd1306_printBitmap(0,1,29,3,EC_bitmap);
           ssd1306_printNumber(probe);
-          delay_ms(1000);
+          delay_ms(100);
         }
 
 	}
