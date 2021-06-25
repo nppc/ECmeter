@@ -31,3 +31,6 @@ void delay_ms(uint16_t ms_count)
   while(delay_on);
  }
 
+uint16_t div32round(uint32_t d1, uint32_t d2){
+  return (d1 + (d2 / 2)) / d2;
+}

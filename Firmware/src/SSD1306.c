@@ -152,6 +152,7 @@ void ssd1306_printNumberDebug(int16_t num){
   // convert binary number to BCD
   uint8_t a[4];
   int16_t tmp;
+  if(num<10000){
       tmp = num;
       a[0] = tmp / 1000;
       tmp = tmp % 1000;

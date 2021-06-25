@@ -35,12 +35,12 @@ void storeSettingsEE(void){
 }
 
 void defaultSettingsEE(void){
-	  calib_data[0].ADCval = 2800; calib_data[0].valid = 0;
-	  calib_data[1].ADCval = 1500; calib_data[1].valid = 0;
-	  calib_data[2].ADCval = 820; calib_data[2].valid = 0;
-	  calib_data[3].ADCval = 600; calib_data[3].valid = 0;
-	  calib_data[4].ADCval = 300; calib_data[4].valid = 0;
-	  calib_data[5].ADCval = 280; calib_data[5].valid = 0;
+	  calib_data[0].ADCval = 3855; calib_data[0].divconst = 6740; //=(ADCval[0]-ADCval[1])*256/100
+	  calib_data[1].ADCval = 1222; calib_data[1].divconst = 1400;
+	  calib_data[2].ADCval = 675; calib_data[2].divconst = 369;
+	  calib_data[3].ADCval = 531; calib_data[3].divconst = 207;
+	  calib_data[4].ADCval = 450; calib_data[4].divconst = 169; //=(ADCval[4]-ADCval[5])*256/100
+	  calib_data[5].ADCval = 384; calib_data[5].divconst = 0;
 }
 
 

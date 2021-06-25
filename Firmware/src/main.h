@@ -8,7 +8,7 @@
 
 /***** COMPILATION VARIANTS *****/
 //#define DEBUGUART
-#define DEBUG
+//#define DEBUG
 #define PREVENTFLASHWRITE
 
 #define BATMINVOLTAGE 3100
@@ -32,7 +32,7 @@ typedef struct
 typedef struct
 {
 	int16_t ADCval; // calibration ADC value
-	uint8_t valid; // 0 - data predefined, 1 - valid calibration value
+	uint16_t divconst; // 0 - data predefined, 1 - valid calibration value
 } calib_t;
 
 

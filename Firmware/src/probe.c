@@ -41,3 +41,18 @@ int16_t GetProbeADC(void){
 #endif
   return sum1-(sum1-sum2)/2;
 }
+
+int16_t convert2EC(int16_t adcval){
+  uint8_t i;
+  // check value for the range
+  if(adcval==calib_data[0].ADCval) return 0; // No EC
+  if(adcval>calib_data[0].ADCval) return 4095; // No EC
+  if(adcval<=calib_data[CALIBRATIONVALUES-1].ADCval) return (CALIBRATIONVALUES-1)*100; // min EC
+  // find value in a table
+  for(i=0;i<(CALIBRATIONVALUES-1);i++){
+      if(adcval>calib_data[i+1].ADCval) break;
+  }
+  // calculate the value from found range
+  // 100-(adcval-[lowerboundinrange])*256/divconst
+  return i*100+(100-div32round((uint32_t)(adcval-calib_data[i+1].ADCval) * 256,calib_data[i].divconst));
+}

@@ -55,13 +55,13 @@ int main(void) {
   glob.calibblinkntr = 0;
   glob.batcheckcntr = 0;
   glob.holdstate = 0;
-  glob.probereadcntr = 0;
+  glob.probereadcntr = 10; // read data on startup
 
 #ifdef DEBUGUART
 	prnUART("START",1);
 #endif
 
-  delay_ms(80); // need for ssd1306 init
+  delay_ms(50); // need for ssd1306 init
 
   loadSettingsEE();
 
@@ -125,7 +125,9 @@ int main(void) {
 		  }
 		  // now store calibration value
 		  calib_data[glob.calibselection].ADCval = csum / 3;
-		  calib_data[glob.calibselection].valid = 1;
+		  if(glob.calibselection<(CALIBRATIONVALUES-1)){
+		      calib_data[glob.calibselection].divconst = div32round((uint32_t)(calib_data[glob.calibselection].ADCval-calib_data[glob.calibselection+1].ADCval)*256,100);
+		  }
 		  // store calibration data to EEPROM
 		  storeSettingsEE();
       }else if(but==2){
@@ -141,8 +143,8 @@ int main(void) {
         if(glob.displaystate!=DISPLAY_EC) ssd1306_clear_display();
           glob.displaystate=DISPLAY_EC;
           ssd1306_printBitmap(0,1,29,3,EC_bitmap);
-          //ssd1306_printNumber(probe);
-		  ssd1306_printNumberDebug(probe);
+          ssd1306_printNumber(convert2EC(probe));
+          //ssd1306_printNumberDebug(probe);
           delay_ms(100);
         }
 
