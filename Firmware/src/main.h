@@ -7,6 +7,7 @@
 
 /***** COMPILATION VARIANTS *****/
 //#define DEBUGUART
+#define DEBUG
 #define PREVENTFLASHWRITE
 
 #define BATMINVOLTAGE 3100

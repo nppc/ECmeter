@@ -61,7 +61,7 @@ uint8_t i,i1;
 // 0.00 - 9.99
 void ssd1306_printNumber(int16_t num){
   // convert binary number to BCD
-  uint8_t i, a[3],tmp3, col;
+  uint8_t i, a[3];
   int16_t tmp;
   if(num<1000){
       tmp = num;
@@ -78,8 +78,7 @@ void ssd1306_printNumber(int16_t num){
   // now print to LCD
   // we print 4 rows and 3 digits with dot
   for(tmp=0;tmp<4;tmp++){
-    col = 128-((number_width+2)*3+dot_width);
-    setCol(col); // set the position
+    setCol(128-((number_width+2)*3+dot_width)); // set the position
     setRow(tmp);
     // first digit
     ssd1306_write_display_start();
@@ -88,8 +87,7 @@ void ssd1306_printNumber(int16_t num){
     I2C_Write(0);
     // print dot
     for(i=0;i<dot_width;i++){
-      tmp3 = i+tmp*dot_width;
-      I2C_Write(dot_bitmap[tmp3]);
+      I2C_Write(dot_bitmap[i+tmp*dot_width]);
     }
     I2C_Write(0);
     I2C_Write(0);
@@ -147,3 +145,45 @@ void ssd1306_printBitmapClear(uint8_t x, uint8_t y, uint8_t w, uint8_t h){
     y++;
   }
 }
+
+#ifdef DEBUG
+// 0000 - 9999
+void ssd1306_printNumberDebug(int16_t num){
+  // convert binary number to BCD
+  uint8_t a[4];
+  int16_t tmp;
+      tmp = num;
+      a[0] = tmp / 1000;
+      tmp = tmp % 1000;
+      a[1] = tmp / 100;
+      tmp = tmp % 100;
+      a[2] = tmp / 10;
+      tmp = tmp % 10;
+      a[3] = tmp;
+  }else{
+      a[0]=10;
+      a[1]=10;
+      a[2]=10;
+      a[3]=10;
+  }
+  // now print to LCD
+  // we print 4 rows and 3 digits with dot
+  for(tmp=0;tmp<4;tmp++){
+    setCol(128-((number_width+1)*4)); // set the position
+    setRow(tmp);
+    ssd1306_write_display_start();
+    // first digit
+    ssd1306_printDigitLine(tmp,a[0]);
+    I2C_Write(0);
+    // print second digit
+    ssd1306_printDigitLine(tmp,a[1]);
+    I2C_Write(0);
+    // print third digit
+    ssd1306_printDigitLine(tmp,a[2]);
+    I2C_Write(0);
+    // print last digit
+    ssd1306_printDigitLine(tmp,a[3]);
+    I2C_Stop();
+  }
+}
+#endif

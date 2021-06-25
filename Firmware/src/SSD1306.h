@@ -20,6 +20,9 @@ void ssd1306_clear_display(void);
 void setCol(uint8_t col);
 void setRow(uint8_t row);
 void ssd1306_printNumber(int16_t num);
+#ifdef DEBUG
+void ssd1306_printNumberDebug(int16_t num);
+#endif
 void ssd1306_printBitmap(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t code *bmp);
 
 /** Set Lower Column Start Address for Page Addressing Mode. */

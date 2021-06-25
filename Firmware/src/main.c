@@ -127,8 +127,9 @@ int main(void) {
         if(glob.displaystate!=DISPLAY_EC) ssd1306_clear_display();
           glob.displaystate=DISPLAY_EC;
           ssd1306_printBitmap(0,1,29,3,EC_bitmap);
-          ssd1306_printNumber(probe);
-          delay_ms(1000);
+          //ssd1306_printNumber(probe);
+		  ssd1306_printNumberDebug(probe);
+          delay_ms(100);
         }
 
 	}

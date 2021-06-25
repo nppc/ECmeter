@@ -38,7 +38,7 @@ void defaultSettingsEE(void){
 	  calib_data[0].ADCval = 2800; calib_data[0].valid = 0;
 	  calib_data[1].ADCval = 1500; calib_data[1].valid = 0;
 	  calib_data[2].ADCval = 820; calib_data[2].valid = 0;
-	  calib_data[3].ADCval = 460; calib_data[3].valid = 0;
+	  calib_data[3].ADCval = 600; calib_data[3].valid = 0;
 	  calib_data[4].ADCval = 300; calib_data[4].valid = 0;
 	  calib_data[5].ADCval = 280; calib_data[5].valid = 0;
 }
