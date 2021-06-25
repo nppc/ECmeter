@@ -78,10 +78,12 @@ SI_INTERRUPT (INT1_ISR, INT1_IRQn)
 // PCA0PWM::COVF (Cycle Overflow Flag)
 //
 //-----------------------------------------------------------------------------
+// every second
 SI_INTERRUPT (PCA0_ISR, PCA0_IRQn)
   {
     PCA0CN0_CCF0=0;
     PCA0=0;
     glob.batcheckcntr++;
+    glob.probereadcntr++;
   }
 

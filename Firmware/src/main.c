@@ -55,6 +55,7 @@ int main(void) {
   glob.calibblinkntr = 0;
   glob.batcheckcntr = 0;
   glob.holdstate = 0;
+  glob.probereadcntr = 0;
 
 #ifdef DEBUGUART
 	prnUART("START",1);
@@ -86,8 +87,13 @@ int main(void) {
 	    int16_t probe;
 	    uint8_t but = getButtonState();
 	    
-		if(glob.holdstate==0) probe = GetProbeADC();
-		// check battery every minute
+      if(glob.holdstate==0){ // read probe if no hold
+          if(glob.probereadcntr>=5) {
+              glob.probereadcntr=0;
+              probe = GetProbeADC();
+          }
+      }
+      // check battery every minute
 	    if(glob.batcheckcntr>60){
 	        if(getBatVoltageMv()<BATMINVOLTAGE){
 	            // reset device to show warning
@@ -104,25 +110,33 @@ int main(void) {
           if(glob.displaystate==DISPLAY_CALIB) ssd1306_printNumber(glob.calibselection*100);
           delay_ms(250);
       }else if(but==3){
-          uint8_t i;
+          uint8_t i, i1;
+		  int16_t csum=0;
           // begin calibration with selected value
-          for(i=0;i<20;i++){
-            if(glob.displaystate==DISPLAY_CALIB) glob.displaystate=DISPLAY_CALIBBLINK; else glob.displaystate=DISPLAY_CALIB;
-            ssd1306_clear_display();
-            if(glob.displaystate==DISPLAY_CALIB) ssd1306_printBitmap(0,1,57,2,calib_bitmap);
-            ssd1306_printNumber(glob.calibselection*100);
-            delay_ms(500);
-          }
-      }else if(but==2){
-          // freeze/unfreeze display
-		  if(glob.holdstate==0){
-			  glob.holdstate=1;
-			  ssd1306_printBitmap(0,0,24,1,hold_bitmap);
-			  
-		  }else{
-			  glob.holdstate=0;
-			  ssd1306_printBitmapClear(0,0,24,1);
+		  for(i1=0;i1<3;i++){ // average 3 readings
+			  for(i=0;i<10;i++){ // about 5 seconds
+				if(glob.displaystate==DISPLAY_CALIB) glob.displaystate=DISPLAY_CALIBBLINK; else glob.displaystate=DISPLAY_CALIB;
+				ssd1306_clear_display();
+				if(glob.displaystate==DISPLAY_CALIB) ssd1306_printBitmap(0,1,57,2,calib_bitmap);
+				ssd1306_printNumber(glob.calibselection*100);
+				delay_ms(500);
+			  }
+			  csum+=GetProbeADC();
 		  }
+		  // now store calibration value
+		  calib_data[glob.calibselection].ADCval = csum / 3;
+		  calib_data[glob.calibselection].valid = 1;
+		  // store calibration data to EEPROM
+		  storeSettingsEE();
+      }else if(but==2){
+        // freeze/unfreeze display
+        if(glob.holdstate==0){
+          glob.holdstate=1;
+          ssd1306_printBitmap(0,0,24,1,hold_bitmap);
+        }else{
+          glob.holdstate=0;
+          ssd1306_printBitmapClear(0,0,24,1);
+        }
       }else{
         if(glob.displaystate!=DISPLAY_EC) ssd1306_clear_display();
           glob.displaystate=DISPLAY_EC;
