@@ -27,6 +27,7 @@ typedef struct
 	uint8_t batcheckcntr;
 	uint8_t holdstate; // 0 - no hold, 1 - hold
 	uint8_t probereadcntr; // count intervals between probe read
+	uint8_t probereadinterval;
 } glob_t;
 
 typedef struct

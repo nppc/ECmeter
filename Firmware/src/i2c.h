@@ -42,9 +42,6 @@ and that both those copyright notices and this permission notice appear in suppo
 /***************************************************************************************************
                                SCL and SDA pin configuration
 ***************************************************************************************************/
-//sbit SCL_PIN = P1^4; //SCL Connected to P1.4
-//sbit SDA_PIN = P1^5; //SDA Connected to P1.5
-
 SI_SBIT(SCL_PIN, SFR_P1, 4); //P+
 SI_SBIT(SDA_PIN, SFR_P1, 5); //P-
 

@@ -40,7 +40,7 @@ void defaultSettingsEE(void){
 	  calib_data[2].ADCval = 675; calib_data[2].divconst = 369;
 	  calib_data[3].ADCval = 531; calib_data[3].divconst = 207;
 	  calib_data[4].ADCval = 450; calib_data[4].divconst = 169; //=(ADCval[4]-ADCval[5])*256/100
-	  calib_data[5].ADCval = 384; calib_data[5].divconst = 0;
+	  calib_data[5].ADCval = 384; calib_data[5].divconst = 0; // no calculation after 5EC
 }
 
 

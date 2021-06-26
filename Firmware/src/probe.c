@@ -45,14 +45,19 @@ int16_t GetProbeADC(void){
 int16_t convert2EC(int16_t adcval){
   uint8_t i;
   // check value for the range
-  if(adcval==calib_data[0].ADCval) return 0; // No EC
-  if(adcval>calib_data[0].ADCval) return 4095; // No EC
-  if(adcval<=calib_data[CALIBRATIONVALUES-1].ADCval) return (CALIBRATIONVALUES-1)*100; // min EC
+  if(adcval>=calib_data[0].ADCval && adcval<4000) return 0; // distilled water
+  if(adcval>=4000) return adcval; // probe in air
   // find value in a table
   for(i=0;i<(CALIBRATIONVALUES-1);i++){
       if(adcval>calib_data[i+1].ADCval) break;
   }
   // calculate the value from found range
   // 100-(adcval-[lowerboundinrange])*256/divconst
-  return i*100+(100-div32round((uint32_t)(adcval-calib_data[i+1].ADCval) * 256,calib_data[i].divconst));
+  if(i==(CALIBRATIONVALUES-1)){
+      // EC greather than 5
+      return (CALIBRATIONVALUES-1)*100+(calib_data[CALIBRATIONVALUES-1].ADCval-adcval);
+  }else{
+      // EC is in a range
+      return i*100+(100-div32round((uint32_t)(adcval-calib_data[i+1].ADCval) * 256,calib_data[i].divconst));
+  }
 }

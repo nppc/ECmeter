@@ -18,8 +18,5 @@ extern uint8_t FlashKey1, FlashKey2;
 void defaultSettingsEE(void);
 void storeSettingsEE(void);
 void loadSettingsEE(void);
-//void clearDataEE(bool force);
-//void readEE2XDATA(void);
-//void writeXDATA2EE(void);
 
 #endif /* INC_PGM_H_ */
