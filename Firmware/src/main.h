@@ -41,5 +41,4 @@ extern glob_t glob;
 #define CALIBRATIONVALUES 6
 extern calib_t xdata calib_data[CALIBRATIONVALUES]; // calibration values 0 - 5
 
-
 #endif /* MAIN_H_ */

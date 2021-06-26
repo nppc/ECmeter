@@ -24,6 +24,7 @@
 #include "probe.h"
 #include "button.h"
 #include "pgm.h"
+#include "bitmaps.h"
 
 volatile glob_t glob;
 volatile calib_t xdata calib_data[6];
