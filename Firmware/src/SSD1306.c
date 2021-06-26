@@ -79,6 +79,34 @@ static const uint8_t code dot_bitmap[] = {
     0xc0, 0x80, 0x03, 0x07, 0x07, 0x07, 0x07, 0x03,
 };
 
+// this section is based on https://github.com/adafruit/Adafruit_SSD1306
+#define init_sequence_length 24 //bytes
+static const uint8_t code initSSD1306sq[] = { // Initialization Sequence
+    // Init sequence for Adafruit 128x32 OLED module
+    SSD1306_DISPLAYOFF,
+    SSD1306_SETDISPLAYCLOCKDIV, 0x80,  // the suggested ratio 0x80
+    SSD1306_SETMULTIPLEX, 0x1F,        // ratio 32
+    SSD1306_SETDISPLAYOFFSET, 0x0,     // no offset
+    SSD1306_SETSTARTLINE | 0x0,        // line #0
+    SSD1306_CHARGEPUMP, 0x14,          // internal vcc
+    SSD1306_MEMORYMODE, 0x02,          // page mode
+#if SSD1306_ROTATION == 0
+    SSD1306_SEGREMAP | 0x1,            // column 127 mapped to SEG0
+    SSD1306_COMSCANDEC,                // column scan direction reversed
+#elif SSD1306_ROTATION == 180
+    SSD1306_SEGREMAP | 0x0,            // column 127 mapped to SEG0
+    SSD1306_COMSCANINC,                // column scan direction reversed
+#endif
+    SSD1306_SETCOMPINS, 0x02,          // sequential COM pins, disable remap
+    SSD1306_SETCONTRAST, 0x7F,         // contrast level 127
+    SSD1306_SETPRECHARGE, 0xF1,        // pre-charge period (1, 15)
+    SSD1306_SETVCOMDETECT, 0x40,       // vcomh regulator level
+    SSD1306_DISPLAYALLON_RESUME,
+    SSD1306_NORMALDISPLAY,
+    //SSD1306_INVERTDISPLAY,
+    //SSD1306_DISPLAYON
+};
+
 
 void ssd1306_printDigitLine(uint8_t line, uint8_t digit);
 
