@@ -28,6 +28,7 @@
 
 volatile glob_t glob;
 volatile calib_t xdata calib_data[6];
+volatile bit bit_readingData = 0;
 
 //-----------------------------------------------------------------------------
 // SiLabs_Startup() Routine
@@ -70,7 +71,6 @@ int main(void) {
   ssd1306_init();
   ssd1306_clear_display();
   ssd1306_send_command(SSD1306_DISPLAYON);
-  //ssd1306_printBitmap(0,1,57,2,calib_bitmap);
 
   // check battery at startup
   bat = getBatVoltageMv();
@@ -93,7 +93,18 @@ int main(void) {
           if(glob.probereadcntr>=glob.probereadinterval) {
               glob.probereadcntr=0;
               probe = GetProbeADC();
-              if(probe>4040){glob.probereadinterval = 1;}else{glob.probereadinterval = 5;}
+              if(probe>4040){
+                  glob.probereadinterval = 1;
+                  bit_readingData = 0;
+              }else{
+                  if(glob.probereadinterval==1){
+                      bit_readingData = 1;
+                      glob.displaystate = DISPLAY_WAIT;
+                  }else{
+                      bit_readingData = 0;
+                  }
+                  glob.probereadinterval = 5;
+              }
           }
       }
 
@@ -143,7 +154,7 @@ int main(void) {
                 calib_data[glob.calibselection].divconst = div32round((uint32_t)(calib_data[glob.calibselection].ADCval-calib_data[glob.calibselection+1].ADCval)*256,100);
             }
             // store calibration data to EEPROM
-            //storeSettingsEE();
+            storeSettingsEE();
             ssd1306_printBitmap(67,1,29,2,ok_bitmap);
         }else{
             // calibration failed
@@ -161,12 +172,16 @@ int main(void) {
         }
       }else{
         if(glob.displaystate!=DISPLAY_EC) ssd1306_clear_display();
-          glob.displaystate=DISPLAY_EC;
-          ssd1306_printBitmap(0,1,29,3,ec_bitmap);
-          ssd1306_printNumber(convert2EC(probe));
-          //ssd1306_printNumberDebug(probe);
-          delay_ms(100);
+        glob.displaystate=DISPLAY_EC;
+        ssd1306_printBitmap(0,1,29,3,ec_bitmap);
+        if(bit_readingData){
+            ssd1306_printBitmap(68,1,53,2,wait_bitmap);
+        }else{
+            ssd1306_printNumber(convert2EC(probe));
         }
+        //ssd1306_printNumberDebug(probe);
+        delay_ms(100);
+      }
 
 	}
 

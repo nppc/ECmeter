@@ -9,7 +9,7 @@
 /***** COMPILATION VARIANTS *****/
 //#define DEBUGUART
 //#define DEBUG
-#define PREVENTFLASHWRITE
+//#define PREVENTFLASHWRITE
 
 #define BATMINVOLTAGE 3100
 #define BATCRITICALVOLTAGE 3000
@@ -17,7 +17,7 @@
 SI_SBIT(PIN_1, SFR_P1, 0); //P+
 SI_SBIT(PIN_2, SFR_P1, 1); //P-
 
-typedef enum {DISPLAY_EC,DISPLAY_CALIB,DISPLAY_CALIBNUMBLINK,DISPLAY_CALIBBLINK} DISPLAY_STATE;
+typedef enum {DISPLAY_EC,DISPLAY_CALIB,DISPLAY_CALIBNUMBLINK,DISPLAY_CALIBBLINK,DISPLAY_WAIT} DISPLAY_STATE;
 
 typedef struct
 {
@@ -40,5 +40,6 @@ typedef struct
 extern glob_t glob;
 #define CALIBRATIONVALUES 6
 extern calib_t xdata calib_data[CALIBRATIONVALUES]; // calibration values 0 - 5
+extern bit bit_readingData;
 
 #endif /* MAIN_H_ */
